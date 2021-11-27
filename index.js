@@ -1,10 +1,13 @@
-// import express from 'express'
+const Express = require('express');
 const puppeteer = require('puppeteer');
 const CronJob = require('cron').CronJob;
 const nodemailer = require("nodemailer");
 // const cheerio = require('cheerio')
 // const axios = require('axios')
-const url = 'https://ru.reactjs.org/docs/conditional-rendering.html'
+
+
+// const app = Express();
+
 
 // ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
@@ -31,7 +34,7 @@ async function priceChecker() {
 //Превращаем строки в числа с плавающей точкой
   var priceListToFloat = priceListTrim.map(i => parseFloat(i))
 //Преобразовуем два массива в один объект (Keys And Values Pair)
-// Стоит заметить, что некоторые ключи в этомобъекте будут отображаться как строки
+// Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
   let namePrice = {}
   for (let i = 0; i<namingList.length; i++) {
     namePrice[namingList[i]] = priceListToFloat[i]
@@ -39,11 +42,11 @@ async function priceChecker() {
 // // При необходимости можно преобразовать полученый объект в JSON объект 
 // let namePriceToJson = JSON.stringify(namePrice);
 
-Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
-// Object.values(namePrice).forEach(val => val < 1000 ? sendNotification(namePrice) : console.log('False'))
-// if (Object.values(namePrice[0] > 40)) {
-//   console.log('Nice!');
-// }
+// Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
+let props = Object.values(namePrice)[0]
+if (Object.values(namePrice[0] > 10)) {
+  sendNotification(props);
+}
 
   await browser.close();
 };
@@ -56,37 +59,39 @@ Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : c
 // }
 // startTraking()
 
-// async function sendNotification(price) { //Google может блокировать подозрительную активность, для того чтобы включить доступ подозрительным приложениям к аккаунту нужно изменить настройки в "https://myaccount.google.com/lesssecureapps and turn on Allow less secure apps".
-//   let transporter = nodemailer.createTransport({
-//     service: 'gmail',
-//     auth: {
-//       user: 'newemail.test.ua@gmail.com',
-//       pass: 'Password12345*'
-//     },
-//   });
+async function sendNotification(props) { 
+//По причине того, что Google может блокировать подозрительную активность, Вы пожете получить ошибку о том, что ваш Логин и Пароль не приняты.
+//В данном случае, для того чтобы дать доступ подозрительным приложениям к Вашему аккаунту нужно зайти в настройки Google "https://myaccount.google.com/lesssecureapps" и включить ползунок "Allow less secure apps".
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 587, false for other ports
+    requireTLS: true,   
+    auth: {
+      user: 'newemail.test.ua@gmail.com',
+      pass: 'Password12345*'
+    },
+  });
 
-//   let textToSend = `Current prices are ${price}`;
-//   let htmlText = `<a href=\"${url}\">Link</a>`
+  const url = 'https://www.hetzner.com/ru/dedicated-rootserver'
 
-//   let info = await transporter.sendMail({
-//     from: 'newemail.test.ua@gmail.com', // sender address
-//     to: "mitusov.maxim@gmail.com", // list of receivers
-//     subject: "Price has changed", // Subject line
-//     text: textToSend, // plain text body
-//     html: htmlText, // html body
-//   });
+  let info = await transporter.sendMail({
+    from: 'newemail.test.ua@gmail.com', // sender address
+    to: "mitusov.maxim@gmail.com", // list of receivers
+    subject: "Price has changed", // Subject line
+    text: `Current price is ${props}. Link to the price page: ${url}`, // plain text body
+    // html: `<a href=\"${url}\">Link to the 'hetzner.com'</a>`, // html body
+  });
 
-//   console.log("Message sent: %s", info.messageId);
-//   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>  
-// }
-
-// async function sendNotification() {
+   console.log("Message sent: %s", info.messageId);
+}
+// async function sendNotification() { //В случае если порт ниже не подходит для gmail, нужно использовать формат порта указанный в примере выше (https://stackoverflow.com/questions/57547536/nodemailer-oauth-gmail-connection-error-connect-etimedout-74-125-140-108465)
 //     var transporter = nodemailer.createTransport({
 //       service: 'gmail',
 //       auth: {
 //         user: 'newemail.test.ua@gmail.com',
 //         pass: 'Password12345*'
-//       }
+//       },
 //     });
 
 //     var mailOptions = {
@@ -104,7 +109,7 @@ Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : c
 //       }
 //     });
 // }
-
+// sendNotification()
 priceChecker()
 
 // ----- Method #2 -----
@@ -224,3 +229,9 @@ priceChecker()
 //     await newPage.close();
 // });
 // -----------------------------------------------------------------------------------------------------------
+
+
+
+// app.listen(process.env.PORT || 3000, () => {
+//   console.log(`App is running on port ${process.env.PORT}`)
+// })
