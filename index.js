@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 // const axios = require('axios')
 const url = 'https://ru.reactjs.org/docs/conditional-rendering.html'
 
-// ----------------------------------------------------------------------------------------> Puppeteer method (dynamic)
+// ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
