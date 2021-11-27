@@ -1,69 +1,15 @@
 // import express from 'express'
 const puppeteer = require('puppeteer');
+const CronJob = require('cron').CronJob;
+const nodemailer = require("nodemailer");
 // const cheerio = require('cheerio')
 // const axios = require('axios')
+const url = 'https://ru.reactjs.org/docs/conditional-rendering.html'
 
-// ------------------------> Cheerio/axios method (static)
+// ----------------------------------------------------------------------------------------> Puppeteer method (dynamic)
 // ----- Method #1 -----
-// axios.get('https://www.hetzner.com/ru/').then(htmlDom => {
-// 	const $ = cheerio.load(htmlDom.data)
-// 	let text = ''
-// 	$('body > div > div > div.col-lg-9.col-md-9 > ul > li:nth-child(2) > a > div > div')
-// 	.each((i, elem) => {
-// 		text += `${$(elem).text()}\n`
-// 	})
-// 	console.log(text)
-// })
-
-// ----- Method #1 -----
-// const parse = async () => {
-// 	const getHtml = async (url) => {
-// 		const { data } = await axios.get(url)
-// 		return cheerio.load(data)
-// 	}
-// 	const $ = await getHtml('https://rozetka.com.ua/search/?price=700-1100&producer=bagsmart&text=Bagsmart+')
-// 	console.log($.html())
-// }
-// parse()
-
-// ------------------------> Puppeteer method (dynamic)
-// ----- Method #1 -----
-// async function start() {
-//   const browser = await puppeteer.launch();
-//   const page = await browser.newPage();
-//   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
-  
-//   await page.waitForSelector('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf')
-//   const html = await page.$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
-//   	(el) => el.innerText)  
-
-//   console.log(html)
-
-//   await browser.close();
-// };
-// start()
-
-// ----- Method #1 -----
-// async function start() {
-//   const browser = await puppeteer.launch();
-//   const page = await browser.newPage();
-//   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
-  
-//   await page.waitForSelector('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf')
-//   const html = await page.$$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
-//   	(elem) => elem.map((i) => {
-//   		return i.innerText;
-//   	}))
-
-//   console.log(html)
-
-//   await browser.close();
-// };
-// start()
-
-// ----- Method #3 -----
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
-async function start() {
+async function priceChecker() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
@@ -90,22 +36,110 @@ async function start() {
   for (let i = 0; i<namingList.length; i++) {
     namePrice[namingList[i]] = priceListToFloat[i]
   }
-// Чтобы все ключи были в одинаковом формате (строк), преобразуем имеющейся объект в JSON объект 
-let namePriceToJson = JSON.stringify(namePrice);
-console.log(namePriceToJson)
+// // При необходимости можно преобразовать полученый объект в JSON объект 
+// let namePriceToJson = JSON.stringify(namePrice);
 
-namePriceToJson.map()
-if (Object.values(namePriceToJson).forEach(val => return val) < 1000) {
-  console.log('Yooooooooooooooo!');
-};
-// if (Object.values(namePriceToJson[0] > 40)) {
-//   console.log('Yooooooooooooooo!');
+Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
+// Object.values(namePrice).forEach(val => val < 1000 ? sendNotification(namePrice) : console.log('False'))
+// if (Object.values(namePrice[0] > 40)) {
+//   console.log('Nice!');
 // }
-
 
   await browser.close();
 };
-start()
+
+// async function startTraking() {
+//   let job = new CronJob('*/15*****', function() {
+//     priceChecker()
+//   }, null, true, 'America/Los_Angeles')
+//   job.start();
+// }
+// startTraking()
+
+// async function sendNotification(price) { //Google может блокировать подозрительную активность, для того чтобы включить доступ подозрительным приложениям к аккаунту нужно изменить настройки в "https://myaccount.google.com/lesssecureapps and turn on Allow less secure apps".
+//   let transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//       user: 'newemail.test.ua@gmail.com',
+//       pass: 'Password12345*'
+//     },
+//   });
+
+//   let textToSend = `Current prices are ${price}`;
+//   let htmlText = `<a href=\"${url}\">Link</a>`
+
+//   let info = await transporter.sendMail({
+//     from: 'newemail.test.ua@gmail.com', // sender address
+//     to: "mitusov.maxim@gmail.com", // list of receivers
+//     subject: "Price has changed", // Subject line
+//     text: textToSend, // plain text body
+//     html: htmlText, // html body
+//   });
+
+//   console.log("Message sent: %s", info.messageId);
+//   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>  
+// }
+
+// async function sendNotification() {
+//     var transporter = nodemailer.createTransport({
+//       service: 'gmail',
+//       auth: {
+//         user: 'newemail.test.ua@gmail.com',
+//         pass: 'Password12345*'
+//       }
+//     });
+
+//     var mailOptions = {
+//       from: 'newemail.test.ua@gmail.com',
+//       to: 'mitusov.maxim@gmail.com',
+//       subject: 'Sending Email using Node.js',
+//       text: 'That was easy!'
+//     };
+
+//     transporter.sendMail(mailOptions, function(error, info){
+//       if (error) {
+//         console.log(error);
+//       } else {
+//         console.log('Email sent: ' + info.response);
+//       }
+//     });
+// }
+
+priceChecker()
+
+// ----- Method #2 -----
+// async function start() {
+//   const browser = await puppeteer.launch();
+//   const page = await browser.newPage();
+//   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
+  
+//   await page.waitForSelector('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf')
+//   const html = await page.$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
+//    (el) => el.innerText)  
+
+//   console.log(html)
+
+//   await browser.close();
+// };
+// start()
+
+// ----- Method #3 -----
+// async function start() {
+//   const browser = await puppeteer.launch();
+//   const page = await browser.newPage();
+//   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
+  
+//   await page.waitForSelector('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf')
+//   const html = await page.$$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
+//    (elem) => elem.map((i) => {
+//      return i.innerText;
+//    }))
+
+//   console.log(html)
+
+//   await browser.close();
+// };
+// start()
 
 // ----- Method #4 -----
 // (async () => {
@@ -114,15 +148,40 @@ start()
 //   await page.goto('https://www.hetzner.com/ru/');
 
 //   const html = await page.evaluate(() => {
-//   	let productPrices = document.querySelectorAll(".price")
-//   	const priceList = [...productPrices]
-//   	return priceList.map(prices => prices.innerText)
+//    let productPrices = document.querySelectorAll(".price")
+//    const priceList = [...productPrices]
+//    return priceList.map(prices => prices.innerText)
 //   })
   
 //   console.log(html)
 
 //   await browser.close();
 // })();
+
+// ----------------------------------------------------------------------------------------> Cheerio/axios method (static)
+// ----- Method #1 -----
+// axios.get('https://www.hetzner.com/ru/').then(htmlDom => {
+// 	const $ = cheerio.load(htmlDom.data)
+// 	let text = ''
+// 	$('body > div > div > div.col-lg-9.col-md-9 > ul > li:nth-child(2) > a > div > div')
+// 	.each((i, elem) => {
+// 		text += `${$(elem).text()}\n`
+// 	})
+// 	console.log(text)
+// })
+
+// ----- Method #1 -----
+// const parse = async () => {
+// 	const getHtml = async (url) => {
+// 		const { data } = await axios.get(url)
+// 		return cheerio.load(data)
+// 	}
+// 	const $ = await getHtml('https://rozetka.com.ua/search/?price=700-1100&producer=bagsmart&text=Bagsmart+')
+// 	console.log($.html())
+// }
+// parse()
+
+
 
 
                                                 /*Notes & Examples of code that you can use for your specific purposes*/
