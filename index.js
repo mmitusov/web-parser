@@ -5,7 +5,6 @@ const cron = require('node-cron');
 // const cheerio = require('cheerio')
 // const axios = require('axios')
 
-
 // const app = Express();
 
 
@@ -23,8 +22,7 @@ async function priceChecker() {
       (elem) => elem.map((i) => {
         return i.innerText;
       }))
-    let namingListToString = namingList.map(i => i.toString()) //ДОБАВИТЬ ЭВЕЙТ?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    
+    let namingListToString = await namingList.map(i => i.toString())    
     const priceList = await page.$$eval('.product-price-sf', 
       (elem) => elem.map((i) => {
         return i.innerText;
@@ -34,7 +32,7 @@ async function priceChecker() {
   //Превращаем строки в числа с плавающей точкой
     var priceListToFloat = priceListTrim.map(i => parseFloat(i))
   //Преобразовуем два массива в один объект (Keys And Values Pair)
-  // Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
+  //Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
     let namePrice = {}
     for (let i = 0; i<namingList.length; i++) {
       namePrice[namingList[i]] = priceListToFloat[i]
@@ -59,9 +57,10 @@ async function startTracking() {
   job.start();
 }
 
-async function sendNotification(props) { 
 //По причине того, что Google может блокировать подозрительную активность, Вы пожете получить ошибку о том, что ваш Логин и Пароль не приняты.
 //В данном случае, для того чтобы дать доступ подозрительным приложениям к Вашему аккаунту нужно зайти в настройки Google "https://myaccount.google.com/lesssecureapps" и включить ползунок "Allow less secure apps".
+//Ссылка на официальную документацию - https://nodemailer.com/smtp/oauth2/#example-2
+async function sendNotification(props) {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -73,43 +72,23 @@ async function sendNotification(props) {
     },
   });
 
-  const url = 'https://www.hetzner.com/ru/dedicated-rootserver'
-
-  let info = await transporter.sendMail({
+  const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
+  let mailOptions = await transporter.sendMail({
     from: '"Hetzner notification" <newemail.test.ua@gmail.com>', // sender address
     to: "mitusov.maxim@gmail.com", // list of receivers
     subject: "Price has changed", // Subject line
     text: `Current price is ${props}. Link to the price page: ${url}`, // plain text body
     // html: `<a href=\"${url}\">Link to the 'hetzner.com'</a>`, // html body
-  });
-
-   console.log("Message sent: %s", info.messageId);
+  });   
+  const checker = (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + mailOptions.response + ', ' +  mailOptions.messageId);
+    }
+  };
+  checker();
 }
-
-// async function sendNotification() { //В случае если порт ниже не подходит для gmail, нужно использовать формат порта указанный в примере выше (https://stackoverflow.com/questions/57547536/nodemailer-oauth-gmail-connection-error-connect-etimedout-74-125-140-108465)
-//     var transporter = nodemailer.createTransport({
-//       service: 'gmail',
-//       auth: {
-//         user: 'newemail.test.ua@gmail.com',
-//         pass: 'Password12345*'
-//       },
-//     });
-
-//     var mailOptions = {
-//       from: 'newemail.test.ua@gmail.com',
-//       to: 'mitusov.maxim@gmail.com',
-//       subject: 'Sending Email using Node.js',
-//       text: 'That was easy!'
-//     };
-
-//     transporter.sendMail(mailOptions, function(error, info){
-//       if (error) {
-//         console.log(error);
-//       } else {
-//         console.log('Email sent: ' + info.response);
-//       }
-//     });
-// }
 
 // sendNotification()
 // priceChecker()
