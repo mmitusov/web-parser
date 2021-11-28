@@ -1,7 +1,7 @@
 const Express = require('express');
 const puppeteer = require('puppeteer');
-const CronJob = require('cron').CronJob;
 const nodemailer = require("nodemailer");
+const cron = require('node-cron');
 // const cheerio = require('cheerio')
 // const axios = require('axios')
 
@@ -13,51 +13,51 @@ const nodemailer = require("nodemailer");
 // ----- Method #1 -----
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
-  await page.waitForSelector('.product-price-sf')
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
+    await page.waitForSelector('.product-price-sf')
 
-//Вытягиваем данные которые привязаны к имени класса интересующего нас елемента 
-  const namingList = await page.$$eval('.product-name-sf', 
-    (elem) => elem.map((i) => {
-      return i.innerText;
-    }))
-  let namingListToString = namingList.map(i => i.toString())
-  
-  const priceList = await page.$$eval('.product-price-sf', 
-    (elem) => elem.map((i) => {
-      return i.innerText;
-    }))
-//Убираем лишний текст который мы спарсили с сайта и оставляем только число в виде массива строк
-  let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
-//Превращаем строки в числа с плавающей точкой
-  var priceListToFloat = priceListTrim.map(i => parseFloat(i))
-//Преобразовуем два массива в один объект (Keys And Values Pair)
-// Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
-  let namePrice = {}
-  for (let i = 0; i<namingList.length; i++) {
-    namePrice[namingList[i]] = priceListToFloat[i]
-  }
-// // При необходимости можно преобразовать полученый объект в JSON объект 
-// let namePriceToJson = JSON.stringify(namePrice);
+  //Вытягиваем данные которые привязаны к имени класса интересующего нас елемента 
+    const namingList = await page.$$eval('.product-name-sf', 
+      (elem) => elem.map((i) => {
+        return i.innerText;
+      }))
+    let namingListToString = namingList.map(i => i.toString()) //ДОБАВИТЬ ЭВЕЙТ?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    
+    const priceList = await page.$$eval('.product-price-sf', 
+      (elem) => elem.map((i) => {
+        return i.innerText;
+      }))
+  //Убираем лишний текст который мы спарсили с сайта и оставляем только число в виде массива строк
+    let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
+  //Превращаем строки в числа с плавающей точкой
+    var priceListToFloat = priceListTrim.map(i => parseFloat(i))
+  //Преобразовуем два массива в один объект (Keys And Values Pair)
+  // Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
+    let namePrice = {}
+    for (let i = 0; i<namingList.length; i++) {
+      namePrice[namingList[i]] = priceListToFloat[i]
+    }
+  // При необходимости сделать уникальную копию данных можно преобразовать полученый объект в JSON, а затем назад в JS объект 
+  // let namePriceToJson = JSON.parse(JSON.stringify(namePrice));
 
-// Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
-let props = Object.values(namePrice)[0]
-if (Object.values(namePrice[0] > 10)) {
-  sendNotification(props);
-}
+  // Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
+    let props = Object.values(namePrice)[0]
+    if (Object.values(namePrice[0] > 10)) {
+      sendNotification(props);
+      // console.log('Hey!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+    }
 
-  await browser.close();
+    await browser.close();
 };
 
-// async function startTraking() {
-//   let job = new CronJob('*/15*****', function() {
-//     priceChecker()
-//   }, null, true, 'America/Los_Angeles')
-//   job.start();
-// }
-// startTraking()
+async function startTracking() {
+  const job = cron.schedule('* * * * *', () => {
+    priceChecker();
+  });
+  job.start();
+}
 
 async function sendNotification(props) { 
 //По причине того, что Google может блокировать подозрительную активность, Вы пожете получить ошибку о том, что ваш Логин и Пароль не приняты.
@@ -76,7 +76,7 @@ async function sendNotification(props) {
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver'
 
   let info = await transporter.sendMail({
-    from: 'newemail.test.ua@gmail.com', // sender address
+    from: '"Hetzner notification" <newemail.test.ua@gmail.com>', // sender address
     to: "mitusov.maxim@gmail.com", // list of receivers
     subject: "Price has changed", // Subject line
     text: `Current price is ${props}. Link to the price page: ${url}`, // plain text body
@@ -85,6 +85,7 @@ async function sendNotification(props) {
 
    console.log("Message sent: %s", info.messageId);
 }
+
 // async function sendNotification() { //В случае если порт ниже не подходит для gmail, нужно использовать формат порта указанный в примере выше (https://stackoverflow.com/questions/57547536/nodemailer-oauth-gmail-connection-error-connect-etimedout-74-125-140-108465)
 //     var transporter = nodemailer.createTransport({
 //       service: 'gmail',
@@ -109,8 +110,14 @@ async function sendNotification(props) {
 //       }
 //     });
 // }
+
 // sendNotification()
-priceChecker()
+// priceChecker()
+startTracking() 
+
+
+
+
 
 // ----- Method #2 -----
 // async function start() {
