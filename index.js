@@ -30,21 +30,68 @@ async function priceChecker() {
   //Убираем лишний текст который мы спарсили с сайта и оставляем только число в виде массива строк
     let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
   //Превращаем строки в числа с плавающей точкой
-    var priceListToFloat = priceListTrim.map(i => parseFloat(i))
+    let priceListToFloat = priceListTrim.map(i => parseFloat(i))
   //Преобразовуем два массива в один объект (Keys And Values Pair)
   //Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
-    let namePrice = {}
+    let newNamePrice = {}
     for (let i = 0; i<namingList.length; i++) {
-      namePrice[namingList[i]] = priceListToFloat[i]
+      newNamePrice[namingList[i]] = priceListToFloat[i]
     }
   // При необходимости сделать уникальную копию данных можно преобразовать полученый объект в JSON, а затем назад в JS объект 
-  // let namePriceToJson = JSON.parse(JSON.stringify(namePrice));
+  // let namePriceToJson = JSON.parse(JSON.stringify(newNamePrice));
 
-  // Object.values(namePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
-    let props = Object.values(namePrice)[0]
-    if (Object.values(namePrice[0] > 10)) {
-      sendNotification(props);
-      // console.log('Hey!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+  let memoryNamePrice = {}
+  if (Object.keys(memoryNamePrice).length === 0 && memoryNamePrice.constructor === Object) {
+    memoryNamePrice = {...newNamePrice}
+    // Object.assign(memoryNamePrice, ...newNamePrice)
+  }
+
+
+
+
+  newNamePrice.newName = newNamePrice.AX51
+  delete newNamePrice.AX51
+  newNamePrice.key3 = 3
+  newNamePrice.AX41 = 1;
+  newNamePrice.EX42 = 2;
+  // console.log(newNamePrice)
+  // console.log(memoryNamePrice)
+
+  let diff = Object.keys(newNamePrice).reduce((diff, key) => {
+    if (memoryNamePrice[key] === newNamePrice[key]) return diff
+    return {
+      ...diff,
+      [key]: newNamePrice[key]
+    }
+  }, {})
+  let emailDiffValues = Object.values(diff)
+  let emailDiffKyes = Object.keys(diff)
+  console.log(emailDiffValues)
+  console.log(emailDiffKyes)
+
+
+  function shallowEqual(object1, object2) {
+    const firstObj = Object.keys(object1);
+    const secondObj = Object.keys(object2);
+
+    for (let i of firstObj) {
+      if (object1[i] !== object2[i]) {
+      console.log(object1[i])
+      }
+    }
+  }
+  shallowEqual(newNamePrice, memoryNamePrice)
+
+ 
+
+
+
+
+  // Object.values(newNamePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
+    let props = Object.values(newNamePrice)[0]
+    if (Object.values(newNamePrice[0] > 10)) {
+      // sendNotification(props);
+      console.log('Hey!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
     }
 
     await browser.close();
@@ -91,8 +138,8 @@ async function sendNotification(props) {
 }
 
 // sendNotification()
-// priceChecker()
-startTracking() 
+priceChecker()
+// startTracking() 
 
 
 
