@@ -96,7 +96,7 @@ async function sendNotification(key, value) {
     requireTLS: true,   
     auth: {
       user: '********@gmail.com',
-      pass: '********!*'
+      pass: '*********'
     },
   });
 
