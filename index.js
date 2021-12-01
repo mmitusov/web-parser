@@ -2,14 +2,18 @@ const Express = require('express');
 const puppeteer = require('puppeteer');
 const nodemailer = require("nodemailer");
 const cron = require('node-cron');
-// const cheerio = require('cheerio')
-// const axios = require('axios')
 
-// const app = Express();
+
+const app = Express();
 
 
 // ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
+
+    let newNamePrice = {};
+    let memoryNamePrice = {};
+    console.log(memoryNamePrice)
+
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
     const browser = await puppeteer.launch();
@@ -31,74 +35,51 @@ async function priceChecker() {
     let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
   //Превращаем строки в числа с плавающей точкой
     let priceListToFloat = priceListTrim.map(i => parseFloat(i))
-  //Преобразовуем два массива в один объект (Keys And Values Pair)
-  //Стоит заметить, что некоторые ключи в этом объекте будут отображаться как строки
-    let newNamePrice = {}
+  //Преобразовуем два массива в новый объект newNamePrice (Keys And Values Pair)
     for (let i = 0; i<namingList.length; i++) {
       newNamePrice[namingList[i]] = priceListToFloat[i]
     }
   // При необходимости сделать уникальную копию данных можно преобразовать полученый объект в JSON, а затем назад в JS объект 
   // let namePriceToJson = JSON.parse(JSON.stringify(newNamePrice));
 
-  let memoryNamePrice = {}
-  if (Object.keys(memoryNamePrice).length === 0 && memoryNamePrice.constructor === Object) {
+  // Обновляем объект memoryNamePrice если он пуст
+    if (Object.keys(memoryNamePrice).length === 0 && memoryNamePrice.constructor === Object) {
+      memoryNamePrice = {...newNamePrice}
+    }
+
+
+    newNamePrice.AX41 = 1;
+    // newNamePrice.EX42 = 2;
+    // newNamePrice.key3 = 3;
+    // newNamePrice.newName = newNamePrice.AX51
+    // delete newNamePrice.AX51
+
+
+  //Проверяем объекты memoryNamePrice и newNamePrice на сходство. При наявности изменений выводим разниц, и отправляем ее на почту.
+   if (Object.keys(memoryNamePrice).length > 0) {
+      let diff = Object.keys(newNamePrice).reduce((diff, key) => {
+        if (memoryNamePrice[key] === newNamePrice[key]) return diff
+        return {
+          ...diff,
+          [key]: newNamePrice[key]
+        }
+      }, {})
+      // Object.entries(diff).map(([key, value]) => console.log(`Server ${key} with the price ${value} has changed its value at`))
+      Object.entries(diff).map(([key, value]) => sendNotification(key, value))
+    }
+
+  console.log(memoryNamePrice)
+  //Обновляем память перед началом следующего цикла
+    for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
     memoryNamePrice = {...newNamePrice}
-    // Object.assign(memoryNamePrice, ...newNamePrice)
-  }
-
-
-
-
-  newNamePrice.newName = newNamePrice.AX51
-  delete newNamePrice.AX51
-  newNamePrice.key3 = 3
-  newNamePrice.AX41 = 1;
-  newNamePrice.EX42 = 2;
-  // console.log(newNamePrice)
-  // console.log(memoryNamePrice)
-
-  let diff = Object.keys(newNamePrice).reduce((diff, key) => {
-    if (memoryNamePrice[key] === newNamePrice[key]) return diff
-    return {
-      ...diff,
-      [key]: newNamePrice[key]
-    }
-  }, {})
-  let emailDiffValues = Object.values(diff)
-  let emailDiffKyes = Object.keys(diff)
-  console.log(emailDiffValues)
-  console.log(emailDiffKyes)
-
-
-  function shallowEqual(object1, object2) {
-    const firstObj = Object.keys(object1);
-    const secondObj = Object.keys(object2);
-
-    for (let i of firstObj) {
-      if (object1[i] !== object2[i]) {
-      console.log(object1[i])
-      }
-    }
-  }
-  shallowEqual(newNamePrice, memoryNamePrice)
-
- 
-
-
-
-
-  // Object.values(newNamePrice).map(val => val < 1000 ? console.log('Time to buy!') : console.log('Wait for a sale'))
-    let props = Object.values(newNamePrice)[0]
-    if (Object.values(newNamePrice[0] > 10)) {
-      // sendNotification(props);
-      console.log('Hey!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-    }
+    for (var pair in newNamePrice) delete newNamePrice[pair];
 
     await browser.close();
 };
 
+//С логикой настройки времени можно ознакомиться на сайте - https://crontab.guru
 async function startTracking() {
-  const job = cron.schedule('* * * * *', () => {
+  const job = cron.schedule('*/1 * * * *', () => {
     priceChecker();
   });
   job.start();
@@ -107,15 +88,15 @@ async function startTracking() {
 //По причине того, что Google может блокировать подозрительную активность, Вы пожете получить ошибку о том, что ваш Логин и Пароль не приняты.
 //В данном случае, для того чтобы дать доступ подозрительным приложениям к Вашему аккаунту нужно зайти в настройки Google "https://myaccount.google.com/lesssecureapps" и включить ползунок "Allow less secure apps".
 //Ссылка на официальную документацию - https://nodemailer.com/smtp/oauth2/#example-2
-async function sendNotification(props) {
+async function sendNotification(key, value) {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: 'newemail.test.ua@gmail.com',
-      pass: 'Password12345*'
+      user: 'email.for.dev.projects@gmail.com',
+      pass: 'Rx7VivaJapEyQ1p!*'
     },
   });
 
@@ -124,7 +105,7 @@ async function sendNotification(props) {
     from: '"Hetzner notification" <newemail.test.ua@gmail.com>', // sender address
     to: "mitusov.maxim@gmail.com", // list of receivers
     subject: "Price has changed", // Subject line
-    text: `Current price is ${props}. Link to the price page: ${url}`, // plain text body
+    text: `${key} server updated its price to: ${value}`, // plain text body
     // html: `<a href=\"${url}\">Link to the 'hetzner.com'</a>`, // html body
   });   
   const checker = (error, info) => {
@@ -137,9 +118,8 @@ async function sendNotification(props) {
   checker();
 }
 
-// sendNotification()
-priceChecker()
-// startTracking() 
+// priceChecker()
+startTracking() 
 
 
 
@@ -265,6 +245,6 @@ priceChecker()
 
 
 
-// app.listen(process.env.PORT || 3000, () => {
-//   console.log(`App is running on port ${process.env.PORT}`)
-// })
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`App is running on port ${process.env.PORT}`)
+})
