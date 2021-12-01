@@ -12,7 +12,7 @@ const app = Express();
 
     let newNamePrice = {};
     let memoryNamePrice = {};
-    console.log(memoryNamePrice)
+    // console.log(memoryNamePrice)
 
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
@@ -48,7 +48,7 @@ async function priceChecker() {
     }
 
 
-    newNamePrice.AX41 = 1;
+    // newNamePrice.AX41 = 1;
     // newNamePrice.EX42 = 2;
     // newNamePrice.key3 = 3;
     // newNamePrice.newName = newNamePrice.AX51
@@ -68,7 +68,7 @@ async function priceChecker() {
       Object.entries(diff).map(([key, value]) => sendNotification(key, value))
     }
 
-  console.log(memoryNamePrice)
+  // console.log(memoryNamePrice)
   //Обновляем память перед началом следующего цикла
     for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
     memoryNamePrice = {...newNamePrice}
@@ -95,15 +95,15 @@ async function sendNotification(key, value) {
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: 'email.for.dev.projects@gmail.com',
-      pass: 'Rx7VivaJapEyQ1p!*'
+      user: '********@gmail.com',
+      pass: '********!*'
     },
   });
 
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
   let mailOptions = await transporter.sendMail({
-    from: '"Hetzner notification" <newemail.test.ua@gmail.com>', // sender address
-    to: "mitusov.maxim@gmail.com", // list of receivers
+    from: '"Hetzner notification" <********>', // sender address
+    to: "********", // list of receivers
     subject: "Price has changed", // Subject line
     text: `${key} server updated its price to: ${value}`, // plain text body
     // html: `<a href=\"${url}\">Link to the 'hetzner.com'</a>`, // html body
