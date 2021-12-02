@@ -95,15 +95,15 @@ async function sendNotification(key, value) {
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: '********@gmail.com',
-      pass: '********!*'
+      user: '*********@gmail.com',
+      pass: '*********'
     },
   });
 
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
   let mailOptions = await transporter.sendMail({
-    from: '"Hetzner notification" <********>', // sender address
-    to: "********", // list of receivers
+    from: '"Hetzner notification" <*********@gmail.com>', // sender address
+    to: "*********@gmail.com", // list of receivers
     subject: "Price has changed", // Subject line
     text: `${key} server updated its price to: ${value}`, // plain text body
     // html: `<a href=\"${url}\">Link to the 'hetzner.com'</a>`, // html body
@@ -132,7 +132,7 @@ startTracking()
 //   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
   
 //   await page.waitForSelector('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf')
-//   const html = await page.$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
+//   const html = await page.$$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
 //    (el) => el.innerText)  
 
 //   console.log(html)
@@ -142,24 +142,6 @@ startTracking()
 // start()
 
 // ----- Method #3 -----
-// async function start() {
-//   const browser = await puppeteer.launch();
-//   const page = await browser.newPage();
-//   await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
-  
-//   await page.waitForSelector('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf')
-//   const html = await page.$$eval('#app_main > div > div > div:nth-child(2) > div > ul > li:nth-child(1) > div > div > div:nth-child(4) > div > div.product-price-sf', 
-//    (elem) => elem.map((i) => {
-//      return i.innerText;
-//    }))
-
-//   console.log(html)
-
-//   await browser.close();
-// };
-// start()
-
-// ----- Method #4 -----
 // (async () => {
 //   const browser = await puppeteer.launch();
 //   const page = await browser.newPage();
