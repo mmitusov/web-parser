@@ -10,6 +10,8 @@ const app = Express();
 // ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
 
+    console.log('Test')
+
     let newNamePrice = {};
     let memoryNamePrice = {};
     // console.log(memoryNamePrice)
@@ -48,7 +50,7 @@ async function priceChecker() {
     }
 
 
-    // newNamePrice.AX41 = 1;
+    newNamePrice.AX41 = 1;
     // newNamePrice.EX42 = 2;
     // newNamePrice.key3 = 3;
     // newNamePrice.newName = newNamePrice.AX51
@@ -95,15 +97,15 @@ async function sendNotification(key, value) {
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: '*********@gmail.com',
-      pass: '*********'
+      user: 'email.for.dev.projects@gmail.com',
+      pass: 'Rx7VivaJapEyQ1p!*'
     },
   });
 
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
   let mailOptions = await transporter.sendMail({
-    from: '"Hetzner notification" <*********@gmail.com>', // sender address
-    to: "*********@gmail.com", // list of receivers
+    from: '"Hetzner notification" <email.for.dev.projects@gmail.com>', // sender address
+    to: "mitusov.maxim@gmail.com", // list of receivers
     subject: "Price has changed", // Subject line
     text: `${key} server updated its price to: ${value}`, // plain text body
     // html: `<a href=\"${url}\">Link to the 'hetzner.com'</a>`, // html body
