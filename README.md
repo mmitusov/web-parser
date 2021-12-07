@@ -2,7 +2,7 @@
 ### Description
 The purpose of this application is in a constant product price monitoring on the legal basis, with the following email notification in case of the price growth/decline, product name changing or assortment update. Web data extractor has been built with use of the following technologies: JavaScript, Node.js, Express.js, Puppeteer and Node-cron.  
 
-### How to clone and deploy Puppeteer app on Heroku using Github
+### How to clone and deploy Puppeteer app on Heroku using Github without errors
     
 1.	Clone this repository to your project folder;
 2.	Before deploying an app make sure that that you're using '--no-sandbox' mode when launching Puppeteer. This can be done by passing it as an argument to your '.launch()' call: `puppeteer.launch({ args: ['--no-sandbox'] });`;
@@ -27,4 +27,6 @@ git push heroku master
 11.	 After deployment you can check if app is working and giving you logs by using previously mentioned command: `heroku logs --tail -a heroku-puppeteer-app`
 12.	 Enjoy!
 
-###### P.S. If this tutorial was helpfull for you Star for this repository would be appreciated.
+
+
+**P.S. If this tutorial was helpful for you - leaving the Star for this repository would be appreciated.**
