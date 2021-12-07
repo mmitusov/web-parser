@@ -20,7 +20,7 @@ const app = Express();
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
     const browser = await puppeteer.launch({
-      headless: true,
+      // headless: true,
       args: ['--no-sandbox']
     });
     const page = await browser.newPage();
@@ -54,7 +54,7 @@ async function priceChecker() {
     }
 
 
-    newNamePrice.AX41 = 1;
+    // newNamePrice.AX41 = 1;
     // newNamePrice.EX42 = 2;
     // newNamePrice.key3 = 3;
     // newNamePrice.newName = newNamePrice.AX51
@@ -62,19 +62,19 @@ async function priceChecker() {
 
 
   //Проверяем объекты memoryNamePrice и newNamePrice на сходство. При наявности изменений выводим разниц, и отправляем ее на почту.
-   if (Object.keys(memoryNamePrice).length > 0) {
-      let diff = Object.keys(newNamePrice).reduce((diff, key) => {
-        if (memoryNamePrice[key] === newNamePrice[key]) return diff
-        return {
-          ...diff,
-          [key]: newNamePrice[key]
-        }
-      }, {})
-      // Object.entries(diff).map(([key, value]) => console.log(`Server ${key} with the price ${value} has changed its value at`))
-      Object.entries(diff).map(([key, value]) => sendNotification(key, value))
-    }
+   // if (Object.keys(memoryNamePrice).length > 0) {
+   //    let diff = Object.keys(newNamePrice).reduce((diff, key) => {
+   //      if (memoryNamePrice[key] === newNamePrice[key]) return diff
+   //      return {
+   //        ...diff,
+   //        [key]: newNamePrice[key]
+   //      }
+   //    }, {})
+   //    // Object.entries(diff).map(([key, value]) => console.log(`Server ${key} with the price ${value} has changed its value at`))
+   //    Object.entries(diff).map(([key, value]) => sendNotification(key, value))
+   //  }
 
-  // console.log(memoryNamePrice)
+  console.log(memoryNamePrice)
   //Обновляем память перед началом следующего цикла
     for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
     memoryNamePrice = {...newNamePrice}
