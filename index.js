@@ -10,7 +10,7 @@ const app = Express();
 // ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
 
-    console.log('Test')
+    console.log('Logs are visible')
 
     let newNamePrice = {};
     let memoryNamePrice = {};
@@ -18,7 +18,10 @@ const app = Express();
 
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox']
+    });
     const page = await browser.newPage();
     await page.goto('https://www.hetzner.com/ru/dedicated-rootserver');
     await page.waitForSelector('.product-price-sf')
