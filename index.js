@@ -10,7 +10,7 @@ const app = Express();
 // ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
 
-    console.log('Logs are visible')
+    console.log('Test: Logs are visible')
 
     let newNamePrice = {};
     let memoryNamePrice = {};
@@ -19,7 +19,7 @@ const app = Express();
 // Открываем виртуальный Хром браузер > переходим на интересующею нас страницу > и ждем пока подгрузится вся страница (весь ее DOM)
 async function priceChecker() {
     const browser = await puppeteer.launch({
-      // headless: true,
+      headless: true,
       args: ['--no-sandbox']
     });
     const page = await browser.newPage();
@@ -38,7 +38,7 @@ async function priceChecker() {
       }))
     console.log({priceList}) //-------------------------------------------------------------------------------------------------------------->>>>>
   //Убираем лишний текст который мы спарсили с сайта и оставляем только число в виде массива строк
-    let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
+    let priceListTrim = priceList.map(i => i.replace(/from|от|€/g, "").trim());
   //Превращаем строки в числа с плавающей точкой
     let priceListToFloat = priceListTrim.map(i => parseFloat(i))
     console.log({priceListTrim}) //-------------------------------------------------------------------------------------------------------------->>>>>
