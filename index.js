@@ -7,7 +7,6 @@ const cron = require('node-cron');
 const app = Express();
 
 
-
 // ----------------------------------------------------------------------------------------> Puppeteer method (for dynamic pages)
 // ----- Method #1 -----
 
