@@ -1,7 +1,7 @@
 # Web data extractor (backend only)
 The purpose of this application is in a constant product price monitoring on the legal basis, with the following email notification in case of the price growth/decline, product name changing or assortment update. Web data extractor has been built with use of the following technologies: JavaScript, Node.js, Express.js, Puppeteer.  
 
-### How to clone and deploy this app on Heroku using Github:
+###### How to clone and deploy this app on Heroku using Github:
     1.	Clone this repository to your project folder.
     2.	Before deploying an app make sure that that you're using '--no-sandbox' mode when launching Puppeteer. This can be done by passing it as an argument to your `.launch()` call: `puppeteer.launch({ args: ['--no-sandbox'] });`.
     3.	Login or create new account on Heroku. Then create new app, name it, and choose your location
