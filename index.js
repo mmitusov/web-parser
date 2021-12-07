@@ -36,11 +36,13 @@ async function priceChecker() {
       (elem) => elem.map((i) => {
         return i.innerText;
       }))
-    console.log(priceList) //-------------------------------------------------------------------------------------------------------------->>>>>
+    console.log({priceList}) //-------------------------------------------------------------------------------------------------------------->>>>>
   //Убираем лишний текст который мы спарсили с сайта и оставляем только число в виде массива строк
     let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
   //Превращаем строки в числа с плавающей точкой
     let priceListToFloat = priceListTrim.map(i => parseFloat(i))
+    console.log({priceListTrim}) //-------------------------------------------------------------------------------------------------------------->>>>>
+    console.log({priceListToFloat}) //-------------------------------------------------------------------------------------------------------------->>>>>
   //Преобразовуем два массива в новый объект newNamePrice (Keys And Values Pair)
     for (let i = 0; i<namingList.length; i++) {
       newNamePrice[namingList[i]] = priceListToFloat[i]
@@ -75,7 +77,6 @@ async function priceChecker() {
    //  }
 
   console.log(newNamePrice) //-------------------------------------------------------------------------------------------------------------->>>>>
-  console.log(memoryNamePrice)
   //Обновляем память перед началом следующего цикла
     for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
     memoryNamePrice = {...newNamePrice}
