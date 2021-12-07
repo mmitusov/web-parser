@@ -8,7 +8,7 @@ The purpose of this application is in a constant product price monitoring on the
 3.	Login or create new account on Heroku. Then create new app, name it, and choose your location;
 4.	Install the Heroku CLI (if you haven’t before);
 5.	Add the ‘heroku remote’ for existing repositories: `heroku git:remote -a heroku-puppeteer-app`;
-6.	Commit your code to the repository and deploy it to Heroku using Git.
+6.	Commit your code to the repository and deploy it to Heroku using Git:
         ```
         git add .
         git commit -am "Heroku"
