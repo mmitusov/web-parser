@@ -24,3 +24,9 @@ b.	$ git commit -am "Heroku"
 c.	$ git push heroku master
 11.	 After deployment you can check if app is working and giving you logs by using previously mentioned command: ‘$ heroku logs --tail -a heroku-puppeteer-app’
 
+Some basic Git commands are:
+```
+git status
+git add
+git commit
+```
