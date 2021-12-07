@@ -15,9 +15,9 @@ The purpose of this application is in a constant product price monitoring on the
         git push heroku master
         ```
 ```
-git status
-git add
-git commit
+        git add .
+        git commit -am "Heroku"
+        git push heroku master
 ```
 7.	Wait until the end of the deployment
 8.	To output logs of your app – open new terminal window and use: ‘$ heroku logs --tail -a heroku-puppeteer-app’
