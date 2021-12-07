@@ -27,6 +27,4 @@ git push heroku master
 11.	 After deployment you can check if app is working and giving you logs by using previously mentioned command: `heroku logs --tail -a heroku-puppeteer-app`
 12.	 Enjoy!
 
-
-
 **P.S. If this tutorial was helpful for you - leaving the Star for this repository would be appreciated.**
