@@ -9,11 +9,11 @@ The purpose of this application is in a constant product price monitoring on the
 4.	Install the Heroku CLI (if you haven’t before);
 5.	Add the ‘heroku remote’ for existing repositories: `heroku git:remote -a heroku-puppeteer-app`;
 6.	Commit your code to the repository and deploy it to Heroku using Git:
-        ```
-        git add .
-        git commit -am "Heroku"
-        git push heroku master
-        ```
+```
+git add .
+git commit -am "Heroku"
+git push heroku master
+```
 7.	Wait until the end of the deployment
 8.	To output logs of your app – open new terminal window and use: ‘$ heroku logs --tail -a heroku-puppeteer-app’
 9.	Add the following buildpack ONLY after you you’ve made an initial commit: https://github.com/jontewks/puppeteer-heroku-buildpack. If you install mentioned buildpack before an initial commit, after deployment your app you might not get any output in your console and app not going to work.
