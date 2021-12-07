@@ -36,6 +36,7 @@ async function priceChecker() {
       (elem) => elem.map((i) => {
         return i.innerText;
       }))
+    console.log(priceList) //-------------------------------------------------------------------------------------------------------------->>>>>
   //Убираем лишний текст который мы спарсили с сайта и оставляем только число в виде массива строк
     let priceListTrim = priceList.map(i => i.replace(/от|€/g, "").trim());
   //Превращаем строки в числа с плавающей точкой
@@ -73,6 +74,7 @@ async function priceChecker() {
    //    Object.entries(diff).map(([key, value]) => sendNotification(key, value))
    //  }
 
+  console.log(newNamePrice) //-------------------------------------------------------------------------------------------------------------->>>>>
   console.log(memoryNamePrice)
   //Обновляем память перед началом следующего цикла
     for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
