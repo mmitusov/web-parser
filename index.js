@@ -49,6 +49,12 @@ const app = Express();
         memoryNamePrice = {...newNamePrice}
       }
 
+
+                          //For testing purposes:
+                                newNamePrice.AX41 = 1;
+
+
+
 //Проверяем объекты memoryNamePrice и newNamePrice на сходство. При наявности изменений выводим разниц, и отправляем ее на почту.
      if (Object.keys(memoryNamePrice).length > 0) {
         let diff = Object.keys(newNamePrice).reduce((diff, key) => {
@@ -88,17 +94,18 @@ async function sendNotification(key, value) {
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: 'your.email@gmail.com',
-      pass: '***your.email.password***'
+      user: 'email.for.dev.projects@gmail.com',
+      pass: 'Rx7VivaJapEyQ1p!*'
     },
   });
 
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
+
   let mailOptions = await transporter.sendMail({
-    from: '"Hetzner notification" <your.email@gmail.com>', // sender address
-    to: "receivers.email@gmail.com", // list of receivers
-    subject: "Price has changed", // Subject line
-    text: `${key} server updated its price to: ${value}`, // plain text body
+    from: '"Hetzner notification" <email.for.dev.projects@gmail.com>', // sender address
+    to: "mitusov.maxim@gmail.com", // list of receivers
+    subject: "Hetzner обновленные цены", // Subject line
+    text: `Ценовое предложение для ${key} теперь составляет ${value} EUR. С новым передложением можно сознакомиться на официальном вебсайте: ${url}.`, // plain text body
   });   
   const checker = (error, info) => {
     if (error) {
