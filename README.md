@@ -3,8 +3,8 @@ The purpose of this application is in a constant product price monitoring on the
 
 ### How to clone and deploy this app on Heroku using Github:
     
-1.	Clone this repository to your project folder.
-2.	Before deploying an app make sure that that you're using '--no-sandbox' mode when launching Puppeteer. This can be done by passing it as an argument to your .launch() call: puppeteer.launch({ args: ['--no-sandbox'] });.
+1.	Clone this repository to your project folder;
+2.	Before deploying an app make sure that that you're using '--no-sandbox' mode when launching Puppeteer. This can be done by passing it as an argument to your `.launch()` call: `puppeteer.launch({ args: ['--no-sandbox'] });`;
 3.	Login or create new account on Heroku. Then create new app, name it, and choose your location
 4.	Install the Heroku CLI (if you haven’t before)
 5.	Add the ‘heroku remote’ for existing repositories: ‘$ heroku git:remote -a heroku-puppeteer-app’
