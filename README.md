@@ -14,19 +14,14 @@ git add .
 git commit -am "Heroku"
 git push heroku master
 ```
-7.	Wait until the end of the deployment
-8.	To output logs of your app – open new terminal window and use: ‘$ heroku logs --tail -a heroku-puppeteer-app’
-9.	Add the following buildpack ONLY after you you’ve made an initial commit: https://github.com/jontewks/puppeteer-heroku-buildpack. If you install mentioned buildpack before an initial commit, after deployment your app you might not get any output in your console and app not going to work.
-a.	To install buildpack use following command ‘$ heroku buildpacks:add jontewks/puppeteer -a heroku-puppeteer-app’
+7.	Wait until the end of the deployment;
+8.	To output logs of your app – open new terminal window and use: `heroku logs --tail -a heroku-puppeteer-app`
+9.	Add the following buildpack ONLY after you you’ve made an initial commit: https://github.com/jontewks/puppeteer-heroku-buildpack. If you install mentioned buildpack before an initial commit, after deployment your app you might not get any output in your console and app not going to work. To install buildpack use following command: `heroku buildpacks:add jontewks/puppeteer -a heroku-puppeteer-app`
 10.	After adding buildpack make small changes in your app, so you can push it again to Heroku using the same following commands:
-a.	$ git add .
-b.	$ git commit -am "Heroku"
-c.	$ git push heroku master
-11.	 After deployment you can check if app is working and giving you logs by using previously mentioned command: ‘$ heroku logs --tail -a heroku-puppeteer-app’
+```
+git add .
+git commit -am "Heroku"
+git push heroku master
+```
+11.	 After deployment you can check if app is working and giving you logs by using previously mentioned command: `heroku logs --tail -a heroku-puppeteer-app`
 
-Some basic Git commands are:
-```
-git status
-git add
-git commit
-```
