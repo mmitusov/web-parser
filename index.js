@@ -2,6 +2,7 @@ const Express = require('express');
 const puppeteer = require('puppeteer');
 const nodemailer = require("nodemailer");
 const cron = require('node-cron');
+var http = require("http"); // Not letting free Heroku dynos to fall asleep every 15 minutes (900000)
 
 
 
@@ -65,6 +66,8 @@ const app = Express();
       for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
       memoryNamePrice = {...newNamePrice}
       for (var pair in newNamePrice) delete newNamePrice[pair];
+      console.log('Cycle is done')
+
 
       await browser.close();
   };
@@ -72,7 +75,7 @@ const app = Express();
 
 //С логикой настройки времени можно ознакомиться на сайте - https://crontab.guru
 async function startTracking() {
-  const job = cron.schedule('0 */6 * * *', () => {
+  const job = cron.schedule('0 */1 * * *', () => {
     priceChecker();
   });
   job.start();
@@ -114,6 +117,10 @@ startTracking()
 
 
 
+
+setInterval(function() {
+    http.get("https://hetzner-puppeteer.herokuapp.com/");
+}, 900000); // every 15 minutes (900000)
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`App is running on port ${process.env.PORT}`)
