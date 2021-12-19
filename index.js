@@ -66,7 +66,7 @@ const app = Express();
       for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
       memoryNamePrice = {...newNamePrice}
       for (var pair in newNamePrice) delete newNamePrice[pair];
-      console.log('Cycle is done')
+      console.log('Cycle is done') //Checking if app have finished current cycle
 
 
       await browser.close();
@@ -90,16 +90,16 @@ async function sendNotification(key, value) {
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: 'email.for.dev.projects@gmail.com',
-      pass: 'Rx7VivaJapEyQ1p!*'
+      user: 'your.email@gmail.com',
+      pass: '***your.email.password***'
     },
   });
 
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
 
   let mailOptions = await transporter.sendMail({
-    from: '"Hetzner notification" <email.for.dev.projects@gmail.com>', // sender address
-    to: "pavel@cloud-office.com.ua", // list of receivers
+    from: '"Hetzner notification" <your.email@gmail.com>', // sender address
+    to: "receivers.email@gmail.com", // list of receivers
     subject: "Hetzner обновленные цены", // Subject line
     text: `Ценовое предложение для ${key} теперь составляет ${value} EUR. С новым передложением можно сознакомиться на официальном вебсайте: ${url}.`, // plain text body
   });   
@@ -119,7 +119,7 @@ startTracking()
 
 
 setInterval(function() {
-    http.get("http://hetzner-puppeteer.herokuapp.com");
+    http.get("http://<name-of-your-app>.herokuapp.com");
 }, 900000); // every 15 minutes (900000)
 
 app.listen(process.env.PORT || 3000, () => {

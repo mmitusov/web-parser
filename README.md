@@ -27,4 +27,15 @@ git push heroku master
 11.	 After deployment you can check if app is working and giving you logs by using previously mentioned command: `heroku logs --tail -a heroku-puppeteer-app`
 12.	 Enjoy!
 
+### Preventing your Heroku app from sleeping
+If you are on a free tier on Heroku your app sleeps if it is not active for more than 30 minutes. To avoid that you can do one of the following: 
+1. Create a JavaScript function that pings your app every 5 minutes. And place it is any file that’s executed in your app. Example of the function is below.
+```
+var http = require("http");
+setInterval(function() {
+    http.get("http://<your app name>.herokuapp.com");
+}, 300000); // every 5 minutes (300000)
+```
+2. Or use [Kaffeine Shots](https://kaffeine.herokuapp.com) app. It basically pings your app every 30 minutes once and doesn't make it sleep except for the minimum 6 hours which is mandatory. But you can turn this option off.
+
 **P.S. If this tutorial was helpful for you - leaving the Star for this repository would be appreciated.**
