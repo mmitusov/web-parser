@@ -2,7 +2,7 @@ const Express = require('express');
 const puppeteer = require('puppeteer');
 const nodemailer = require("nodemailer");
 const cron = require('node-cron');
-var http = require("http"); // Not letting free Heroku dynos to fall asleep every 15 minutes (900000)
+var http = require("http"); // Not letting free Heroku dynos to fall asleep every 20 minutes (1200000)
 
 
 
@@ -66,7 +66,8 @@ const app = Express();
       for (var pair in memoryNamePrice) delete memoryNamePrice[pair];
       memoryNamePrice = {...newNamePrice}
       for (var pair in newNamePrice) delete newNamePrice[pair];
-      console.log('Cycle is done') //Checking if app have finished current cycle
+      
+      console.log('Cycle is done') //Checking if app have finished a current cycle
 
 
       await browser.close();
@@ -75,7 +76,7 @@ const app = Express();
 
 //С логикой настройки времени можно ознакомиться на сайте - https://crontab.guru
 async function startTracking() {
-  const job = cron.schedule('0 */1 * * *', () => {
+  const job = cron.schedule('0 */6 * * *', () => {
     priceChecker();
   });
   job.start();
@@ -90,16 +91,16 @@ async function sendNotification(key, value) {
     secure: false, // true for 587, false for other ports
     requireTLS: true,   
     auth: {
-      user: 'your.email@gmail.com',
-      pass: '***your.email.password***'
+      user: 'email.for.dev.projects@gmail.com',
+      pass: 'Rx7VivaJapEyQ1p!*'
     },
   });
 
   const url = 'https://www.hetzner.com/ru/dedicated-rootserver';
 
   let mailOptions = await transporter.sendMail({
-    from: '"Hetzner notification" <your.email@gmail.com>', // sender address
-    to: "receivers.email@gmail.com", // list of receivers
+    from: '"Hetzner notification" <email.for.dev.projects@gmail.com>', // sender address
+    to: "pavel@cloud-office.com.ua", // list of receivers
     subject: "Hetzner обновленные цены", // Subject line
     text: `Ценовое предложение для ${key} теперь составляет ${value} EUR. С новым передложением можно сознакомиться на официальном вебсайте: ${url}.`, // plain text body
   });   
@@ -119,8 +120,8 @@ startTracking()
 
 
 setInterval(function() {
-    http.get("http://<name-of-your-app>.herokuapp.com");
-}, 900000); // every 15 minutes (900000)
+    http.get("http://hetzner-puppeteer.herokuapp.com");
+}, 1200000); // every 20 minutes (1200000)
 
 app.listen(process.env.PORT || 3000, () => {
   console.log(`App is running on port ${process.env.PORT}`)
