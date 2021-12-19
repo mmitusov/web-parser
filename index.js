@@ -119,7 +119,7 @@ startTracking()
 
 
 setInterval(function() {
-    http.get("http://hetzner-puppeteer.herokuapp.com/");
+    http.get("http://hetzner-puppeteer.herokuapp.com");
 }, 900000); // every 15 minutes (900000)
 
 app.listen(process.env.PORT || 3000, () => {
