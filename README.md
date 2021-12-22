@@ -38,4 +38,6 @@ setInterval(function() {
 ```
 2. Or use [Kaffeine Shots](https://kaffeine.herokuapp.com) app. It basically pings your app every 30 minutes once and doesn't make it sleep except for the minimum 6 hours which is mandatory. But you can turn this option off.
 
-**P.S. If this tutorial was helpful for you - leaving the Star for this repository would be appreciated.**
+**P.S. You can view the amount of free dyno hours remaining by using the CLI. You can do this by running heroku ps on one of your free apps: `heroku ps -a <app name>`**
+
+If this tutorial was helpful for you - leaving the Star for this repository would be appreciated.
